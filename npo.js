@@ -25,26 +25,25 @@ client.fetch(url,params,function(err,$,response){
     // console.log($);
     // console.log($.xml());
 
-    var body =$.html();
-    // console.log(body);
-    // console.log(body.length);
-    // console.log(body[0]);
-    // console.log(body[100]);
-    // console.log(body[1000]);
-    // console.log(body[10000]);
+    //var body =$.html();
 
-    const stringifier = csv.stringify({header:false,columns:header});
-    // const writeableStream = fs.createWriteStream('npo.csv',{encoding:'utf-8'});
-    // stringifier.pipe(writeableStream);
+    const stringifier = csv.stringify({header:true,columns:header});
+    //const stringifier = csv.("");
+    const writeableStream = fs.createWriteStream('npo.csv',{encoding:'utf-8'});
+    //stringifier.write(body)
+
 
     var accum_txt = "";
-    $("tr>td").each(function(idx){
+    $("td").each(function(idx){
         var text = $(this).text();
-        stringifier.pipe(text);
+        accum_txt += text + ",";
         if((idx+1)%5===0){
-            stringifier.write("\n");
-        }
+            accum_txt += "\n";
+        };
     });
+
+    stringifier.write(accum_txt);
+    stringifier.pipe(writeableStream);
 
 });
 
